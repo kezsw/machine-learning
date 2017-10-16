@@ -17,6 +17,10 @@ b = 5.0
 # p(mu) = Beta(alpha, beta)
 prior_mu = beta.pdf(mu_test,a,b)
 
+plt.plot(mu_test, prior_mu)
+plt.show()
+
+
 # posterior
 def posterior(a,b,X):
     a_n = a + X.sum()
