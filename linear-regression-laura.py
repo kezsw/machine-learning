@@ -19,9 +19,9 @@ W =  np.transpose(W)
 
 error = np.random.normal(0,0.3,len(x))
 # create prior
-prior_W_1 = np.random.normal(W[1],0.9,len(x)) + error
-prior_W_2 = np.random.normal(W[1],0.5,len(x)) + error
-prior_W_3 = np.random.normal(W[1],0.1,len(x)) + error
+prior_W_1 = np.random.normal(W[1],0.9,len(x))
+prior_W_2 = np.random.normal(W[1],0.5,len(x))
+prior_W_3 = np.random.normal(W[1],0.1,len(x))
 
 y = W[0]*x + W[1] + error;
 #prior_W = np.random.multivariate_normal(W, cov, X.shape[0])
