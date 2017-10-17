@@ -65,13 +65,30 @@ ax.set_ylabel('$p(w|x,y)$')
 # x = np.linspace(-1,1,201)
 # x = x.reshape(-1,1)
 
+x = x[:,1]
+Y = Y[:,1]
 x = x.T
-m_n = 1/sigma * (inv(1/sigma * x.T.dot(x) + t*np.identity(x.shape[1]))).dot(x.T).dot(Y.T)
-s_n_inv = 1/sigma * (x.T).dot(x) + t*np.identity(x.shape[1])
-posterior_w  = multivariate_normal(mean=[m_n.item(0),m_n.item(1)],cov=[[s_n_inv.item(0),s_n_inv.item(1)],[s_n_inv.item(2),s_n_inv.item(3)]]).pdf(x)
+x = x.reshape(-1,1)
+
+## for 1 data point
+def posterior(x,Y):
+    m_n = 1/sigma * (inv(1/sigma * x.T.dot(x) + t*np.identity(x.shape[1]))).dot(x.T).dot(Y.T)
+    s_n_inv = 1/sigma * (x.T).dot(x) + t*np.identity(x.shape[1])
+    return multivariate_normal(mean=[m_n.item(0)],cov=[s_n_inv.item(0)]).pdf(x)
+# m_n = 1/sigma * (inv(1/sigma * x.T.dot(x) + t*np.identity(x.shape[1]))).dot(x.T).dot(Y.T)
+# s_n_inv = 1/sigma * (x.T).dot(x) + t*np.identity(x.shape[1])
+# posterior_w  = multivariate_normal(mean=[m_n.item(0)],cov=[s_n_inv.item(0)]).pdf(x)
+
+posterior_w = posterior(x,Y)
+
+## Full matrix multiplication
+# m_n = 1/sigma * (inv(1/sigma * x.T.dot(x) + t*np.identity(x.shape[1]))).dot(x.T).dot(Y.T)
+# s_n_inv = 1/sigma * (x.T).dot(x) + t*np.identity(x.shape[1])
+# posterior_w  = multivariate_normal(mean=[m_n.item(0),m_n.item(1)],cov=[[s_n_inv.item(0),s_n_inv.item(1)],[s_n_inv.item(2),s_n_inv.item(3)]]).pdf(x)
 
 ax.plot(x,posterior_w,'c')
 plt.show()
+
 
 # x = x.T
 # a = Y[:4,:]
