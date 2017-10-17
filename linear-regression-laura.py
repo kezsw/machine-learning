@@ -14,24 +14,36 @@ from numpy.linalg import inv
 mu = 0
 sigma = 0.3
 W = np.array([-1.3,0.5]) # [W1 W0]
-W = W.reshape(-1,2)
+W = W.reshape(-1,1)
 # cov=t*np.eye(W.shape[1])
 
 # covariance
-t = 0.1
+t = 0.08
 
 # generate data
-x = np.ones([2,201])
-x[1,:] = np.linspace(-1,1,201)
-# x = np.linspace(-1,1,201)
-# x = x.reshape(-1,1)
+# x = np.ones([2,201])
+# x[1,:] = np.linspace(-1,1,201)
+x = np.linspace(-1,1,201)
+x = x.reshape(-1,1)
 
 # calculate prior
-prior_w = multivariate_normal(mean=[W.item(0),W.item(1)],cov=[[t,0],[0,t]]).pdf(x.T)
+prior_w = multivariate_normal(mean=[W.item(0),W.item(1)],cov=[[t,0],[0,t]]).pdf(x)
 prior_w = prior_w.reshape(-1,1)
 
+# plt.plot(x,prior_w)
+# plt.show()
+
+# create Y by adding column of 1's to x
+# error = norm(mu,sigma).pdf(x.T)
+# x = np.ones([2,201])
+# x[1,:] = np.linspace(-1,1,201)
+# Y = (W.T).dot(x) + error
+
+Y = (W).dot(x.T)
+x = np.ones([2,201])
+x[1,:] = np.linspace(-1,1,201)
 error = norm(mu,sigma).pdf(x)
-Y = W.T * x + error
+Y = Y + error
 
 # create figure
 fig = plt.figure(figsize=(10,5))
@@ -40,7 +52,7 @@ ax.set_xlabel('$w$')
 ax.set_ylabel('$p(w|x,y)$')
 
 # plot prior
-ax.plot(x.T,prior_w,'b')
+# ax.plot(x.T,prior_w,'b')
 
 # posterior
 # def posterior(Y):
@@ -50,10 +62,29 @@ ax.plot(x.T,prior_w,'b')
 #     j = j + 1
 #     return norm(m_n,s_n_inv).pdf(x)
 
+# x = np.linspace(-1,1,201)
+# x = x.reshape(-1,1)
+
+x = x.T
+m_n = 1/sigma * (inv(1/sigma * x.T.dot(x) + t*np.identity(x.shape[1]))).dot(x.T).dot(Y.T)
+s_n_inv = 1/sigma * (x.T).dot(x) + t*np.identity(x.shape[1])
+posterior_w  = multivariate_normal(mean=[m_n.item(0),m_n.item(1)],cov=[[s_n_inv.item(0),s_n_inv.item(1)],[s_n_inv.item(2),s_n_inv.item(3)]]).pdf(x)
+
+ax.plot(x,posterior_w,'c')
+plt.show()
+
+# x = x.T
+# a = Y[:4,:]
+# a = a.reshape(-1,2)
+# m_n = 1/sigma * (inv(1/sigma * x.T.dot(x) + t*np.identity(x.shape[1]))).dot(x.T).dot(a)
+# s_n_inv = 1/sigma * (x.T).dot(x) + t*np.identity(x.shape[1])
+# posterior_w = norm(m_n,s_n_inv).pdf(x)
+# multivariate_normal(mean=[m_n.item(0),m_n.item(1),m_n.item(2),m_n.item(3)],cov=[[s_n_inv.item(0),s_n_inv.item(1)],[s_n_inv.item(2),s_n_inv.item(3)]])#.pdf(x.T)
+
 # m_n = 1/sigma * (inv(1/sigma * x.T.dot(x) + t*np.identity(x.shape[1]))).dot(x.T).dot(Y[:1])
 # s_n_inv = 1/sigma * (x.T).dot(x) + t*np.identity(x.shape[1])
 # posterior_w = norm(m_n,s_n_inv).pdf(x)
-#
+
 # ax.plot(x,posterior_w[:,100],'r')
 # ax.plot(x,posterior_w[:,101],'g')
 # ax.plot(x,posterior_w[:,102],'b')
