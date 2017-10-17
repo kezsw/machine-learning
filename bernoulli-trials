@@ -22,7 +22,7 @@ plt.show()
 
 
 # posterior
-def posterior(a,b,X):
+def posterior(X):
     a_n = a + X.sum()
     b_n = b + (X.shape[0] - X.sum())
     return beta.pdf(mu_test,a_n,b_n)
@@ -43,7 +43,7 @@ index = np.random.permutation(X.shape[0])
 # update assumption (set posterior (n) as prior (n+1)
 for i in range(0,X.shape[0]):
     # plot posterior
-    y = posterior(a,b,X[:index[i]])
+    y = posterior(X[:index[i]])
     ax.plot(mu_test,y,'r', alpha=0.3)
 
 plt.show()
