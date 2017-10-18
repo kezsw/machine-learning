@@ -65,13 +65,15 @@ ax.set_ylabel('$p(w|x,y)$')
 # x = np.linspace(-1,1,201)
 # x = x.reshape(-1,1)
 
-x = x[:,1]
-Y = Y[:,1]
-x = x.T
-x = x.reshape(-1,1)
+## for 1 data point
+# x = x[:,1]
+# Y = Y[:,1]
+# x = x.T
+# x = x.reshape(-1,1)
 
 ## for 1 data point
 def posterior(x,Y):
+    x = x.reshape(-1, 1)
     m_n = 1/sigma * (inv(1/sigma * x.T.dot(x) + t*np.identity(x.shape[1]))).dot(x.T).dot(Y.T)
     s_n_inv = 1/sigma * (x.T).dot(x) + t*np.identity(x.shape[1])
     return multivariate_normal(mean=[m_n.item(0)],cov=[s_n_inv.item(0)]).pdf(x)
@@ -79,15 +81,22 @@ def posterior(x,Y):
 # s_n_inv = 1/sigma * (x.T).dot(x) + t*np.identity(x.shape[1])
 # posterior_w  = multivariate_normal(mean=[m_n.item(0)],cov=[s_n_inv.item(0)]).pdf(x)
 
-posterior_w = posterior(x,Y)
+## for 1 data point
+# posterior_w = posterior(x,Y)
+# ax.plot(x,posterior_w,'c')
+# plt.show()
 
+# lets pick a random (uniform) point from the data # and update our assumption with this
+index = np.random.permutation(x.shape[1])
+for i in range(0,3):
+    y = posterior(x[:,index[i]],Y[:,index[i]])
+    plt.plot(x,y,'r',alpha=0.3)
+
+plt.show()
 ## Full matrix multiplication
 # m_n = 1/sigma * (inv(1/sigma * x.T.dot(x) + t*np.identity(x.shape[1]))).dot(x.T).dot(Y.T)
 # s_n_inv = 1/sigma * (x.T).dot(x) + t*np.identity(x.shape[1])
 # posterior_w  = multivariate_normal(mean=[m_n.item(0),m_n.item(1)],cov=[[s_n_inv.item(0),s_n_inv.item(1)],[s_n_inv.item(2),s_n_inv.item(3)]]).pdf(x)
-
-ax.plot(x,posterior_w,'c')
-plt.show()
 
 
 # x = x.T
