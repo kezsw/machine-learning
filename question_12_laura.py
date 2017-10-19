@@ -31,7 +31,7 @@ var_err = 0.3
 sigma_err = math.sqrt(var_err)
 err = norm(mu_err,sigma_err).pdf(x)
 err_shape = err.shape
-Y = (W.T).dot(x) + err
+Y = np.dot(np.transpose(W),x) + err
 Y_shape = Y.shape
 
 t = 1
@@ -46,4 +46,22 @@ pos = np.empty(w0.shape + (2,))
 pos[:, :, 0] = w0; pos[:, :, 1] = w1
 prior_w = multivariate_normal(W.flatten(), [[t, 0], [0, t]])
 plt.contourf(w0, w1, prior_w.pdf(pos))
-plt.show()
+#plt.show()
+
+# test = np.dot(1/var_err,np.dot(np.transpose(x),x))
+# test2 = np.dot(t,np.eye(x.shape[1]))
+# var_pos = np.add(test,test2)
+
+# test3 = np.dot(1/var_err,np.dot(np.transpose(x),Y))
+# test4 = np.dot(test,var_pos)
+
+test = np.dot(1/var_err,np.dot(np.transpose(x),x))
+test2 = np.dot(t,np.eye(x.shape[1]))
+var_pos = np.add(test,test2)
+
+test3 = np.dot(1/var_err,np.dot(np.transpose(x),Y))
+inverse_var = np.linalg.inv(var_pos)
+test4 = np.dot(test3,inverse_var)
+
+print test.shape, test2.shape, test4.shape, x.shape, np.transpose(x).shape, Y.shape
+
