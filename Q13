@@ -1,0 +1,19 @@
+import numpy as np
+import math
+from scipy.spatial.distance import cdist
+import matplotlib.pyplot as plt
+
+# Define variables
+pi = math.pi
+l1 = 1 # length scale
+x = np.linspace(-5, 5, 200)
+x = x.reshape(-1, 1)
+mu = np.zeros(x.shape)
+
+# Compute function
+K = np.exp(-cdist(x, x)**2/2*l1)
+f = np.random.multivariate_normal(mu.flatten(), K, 10)
+
+# Plot
+plt.plot(x, f.T)
+plt.show()
