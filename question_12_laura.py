@@ -18,6 +18,7 @@ x_shape = x.shape
 W_shape = W.shape
 WT_shape = WT.shape
 
+## Should mu not be expectation of Y??
 #if WT_shape[1] == x_shape[0]:
 #	mu = WT.dot(x)
 #	mu_shape = mu.shape
@@ -33,8 +34,8 @@ err_shape = err.shape
 Y = (W.T).dot(x) + err
 Y_shape = Y.shape
 
-
-t = 0.5
+t = 1
+## If Mu is expectation of Y then cov is a 201*201 matrix
 #cov = np.eye(x_shape[1])*t
 #cov_shape = cov.shape
 #print cov_shape
